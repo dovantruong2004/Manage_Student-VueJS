@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do list</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>To do list</h1>
+        <input type="text" v-model="newTodo" placeholder="Nhập việc bạn cần làm" @keyup.enter="addTodo">
+        <button @click="addTodo">Thêm</button>
+        <ul>
+            <li v-for="(todo,index) in list" :key="index">
+                {{todo}}
+                <button @click="removeTodo(index)">Xóa</button>
+            </li>
+        </ul>
+    </div>
+    <script>
+        const {createApp} = Vue;
+        createApp(
+            {
+                data() {
+                    return {
+                        newTodo:'',
+                        list : []
+                    }
+                },
+                methods : {
+                    addTodo(){
+                        if(this.newTodo.trim() !== ""){
+                            this.list.push(this.newTodo)
+                            this.newTodo = ''
+                        }
+                    },
+                    removeTodo(index){
+                        this.list.splice(index,1)
+                    }
+                }
+            }
+        ).mount('#app');
+    </script>
+</body>
+</html>
