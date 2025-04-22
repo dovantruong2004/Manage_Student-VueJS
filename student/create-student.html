@@ -12,16 +12,45 @@
     <div class="container">
         <div id="app">
             <h1>Create students</h1>
-            <form action="" method="post" class="form">
-                
-            </form>
+            <div class="form">
+                <label for="">Name</label>
+                <input type="text" class="form-control" v-model="student.name">
+                <label for="">Score</label>
+                <input type="text" class="form-control" v-model="student.score">
+                <label for="">Sex</label>
+                <select name="" id="" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" v-model="student.sex">
+                    <option value="0">Male</option>
+                    <option value="1">Female</option>
+                </select>
+                <button class="btn btn-primary" @click="addStudent">Submit</button>
+            </div>
         </div>
     </div>
     <script>
         const {createApp}=Vue;
         createApp(
             {
-                
+                data (){
+                    return {
+                        student : {
+                            name : '',
+                            score : '',
+                            sex : ''
+                        }
+                    }
+                },
+                methods : {
+                    async addStudent(){
+                        await fetch('https://68074a84e81df7060eb99052.mockapi.io/student/student',
+                            {
+                                method:'POST',
+                                headers: {'Content-Type':'application/json'},
+                                body :JSON.stringify(this.student)
+                            }
+                        );
+                        alert('Successfull !');
+                    },
+                }
             }
         ).mount('#app');
     </script>

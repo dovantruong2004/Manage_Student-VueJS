@@ -12,6 +12,13 @@
     <div class="container">
         <div id="app">
             <h1>List students</h1>
+            <a href="create-student.html" class="btn btn-success">Create</a>
+            <div class="mt-4">
+                <label for="">Filter</label>
+                <select name="" id="" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                    <option value="">--Choose--</option>
+                </select>
+            </div>
             <table class="table">
                 <thead>
                     <th>ID</th>
@@ -24,7 +31,7 @@
                     <tr v-for="(std,index) in students" :key="std.id">
                         <td>{{index}}</td>
                         <td>{{std.name}}</td>
-                        <td>{{std.sex}}</td>
+                        <td>{{std.sex==0 || std.sex==false ? 'Male' : 'Female'}}</td>
                         <td>{{std.score}}</td>
                         <td>
                             <button class="btn btn-danger">Delete</button>
@@ -48,8 +55,7 @@
                             sex : '',
                             score : '',
                             id : null
-                        },
-                        isEdit : false
+                        } 
                     }
                 },
                 mounted(){
@@ -59,7 +65,8 @@
                     async fetchStudents(){
                         const res = await fetch('https://68074a84e81df7060eb99052.mockapi.io/student/student');
                         this.students = await res.json();
-                    }
+                    },
+
                 }
             }
         ).mount('#app');
