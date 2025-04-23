@@ -15,8 +15,10 @@
             <a href="create-student.html" class="btn btn-success">Create</a>
             <div class="mt-4">
                 <label for="">Filter</label>
-                <select name="" id="" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-                    <option value="">--Choose--</option>
+                <select name="" id="" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" v-model="selectSex">
+                    <option value="">--All--</option>
+                    <option value="0">Male</option>
+                    <option value="1">Female</option>
                 </select>
             </div>
             <table class="table">
@@ -28,14 +30,14 @@
                     <th>Action</th>
                 </thead>
                 <tbody>
-                    <tr v-for="(std,index) in students" :key="std.id">
+                    <tr v-for="(std,index) in filterStudent" :key="std.id">
                         <td>{{index}}</td>
                         <td>{{std.name}}</td>
                         <td>{{std.sex==0 || std.sex==false ? 'Male' : 'Female'}}</td>
                         <td>{{std.score}}</td>
                         <td>
-                            <button class="btn btn-danger">Delete</button>
-                            <button class="btn btn-warning">Update</button>
+                            <button class="btn btn-danger" @click="deleteStudent(std.id)">Delete</button>
+                            <a :href="`update-student.html?id=${std.id}`" class="btn btn-warning">Update</a>
                         </td>
                     </tr>
                 </tbody>
@@ -55,7 +57,17 @@
                             sex : '',
                             score : '',
                             id : null
-                        } 
+                        },
+                        selectSex:'' 
+                    }
+                },
+                computed :{
+                    filterStudent(){
+                        if(this.selectSex===''){
+                            return this.students
+                        }else{
+                            return this.students.filter(std => String(std.sex)==this.selectSex)
+                        }
                     }
                 },
                 mounted(){
@@ -66,7 +78,15 @@
                         const res = await fetch('https://68074a84e81df7060eb99052.mockapi.io/student/student');
                         this.students = await res.json();
                     },
-
+                    async deleteStudent(id){
+                        if(confirm('Are you sure delete ?')){
+                            await fetch(`${this.apiUrl}/${id}`,{
+                                method:'DELETE'
+                            });
+                            this.fetchStudents();
+                            alert('Delete successfull !');
+                        }
+                    }
                 }
             }
         ).mount('#app');

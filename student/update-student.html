@@ -13,8 +13,6 @@
         <div id="app">
             <h1>Update students</h1>
             <div class="form">
-                <label for="">ID</label>
-                <input type="text" class="form-control" v-model="student.id">
                 <label for="">Name</label>
                 <input type="text" class="form-control" v-model="student.name">
                 <label for="">Score</label>
@@ -24,7 +22,7 @@
                     <option value="0">Male</option>
                     <option value="1">Female</option>
                 </select>
-                <button class="btn btn-primary" @click="addStudent">Submit</button>
+                <button class="btn btn-primary" @click="updateStudent">Submit</button>
             </div>
         </div>
     </div>
@@ -32,8 +30,16 @@
         const {createApp}=Vue;
         createApp(
             {
+                
+                mounted(){
+                    const urlParams = new URLSearchParams(window.location.search);
+                    this.studentID = urlParams.get('id');
+                    this.fetchStudent();
+                },
                 data (){
                     return {
+                        studentId: null,
+                        apiUrl: 'https://68074a84e81df7060eb99052.mockapi.io/student/student',
                         student : {
                             name : '',
                             score : '',
@@ -42,8 +48,13 @@
                     }
                 },
                 methods : {
-                    async addStudent(){
-                        await fetch('https://68074a84e81df7060eb99052.mockapi.io/student/student',
+                    async fetchStudent(){
+                        const res = await fetch(`${this.apiUrl}/${this.studentID}`);
+                        this.student = await res.json();
+                        this.student = data;
+                    },
+                    async updateStudent(){
+                        await fetch(`${this.apiUrl}/${this.studentID}`,
                             {
                                 method:'PUT',
                                 headers: {'Content-Type':'application/json'},
@@ -51,6 +62,7 @@
                             }
                         );
                         alert('Successfull !');
+                        window.location.href='list-student.html';
                     },
                 }
             }
